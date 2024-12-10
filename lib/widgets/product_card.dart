@@ -79,7 +79,7 @@ class ProductCard extends StatelessWidget {
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 18,
                   ),
                 ),
               ),
@@ -89,7 +89,7 @@ class ProductCard extends StatelessWidget {
                   item.title,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 12,
+                    fontSize: 10,
                   ),
                   maxLines: 2,  // Giới hạn số dòng hiển thị là 2
                   overflow: TextOverflow.fade,  // Ẩn phần văn bản thừa mà không hiển thị dấu ba chấm
