@@ -137,7 +137,7 @@ class _HomeTabState extends State<HomeTab> {
               padding: const EdgeInsets.all(8.0),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.55,
+                childAspectRatio: 0.5,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),

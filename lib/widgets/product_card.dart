@@ -34,7 +34,7 @@ class ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              (index%2==1) ? SizedBox(height: screen.percentHeight(0.035),) :SizedBox(height: 5,),
+              (index%2==1) ? SizedBox(height: screen.percentHeight(0.03),) :SizedBox(height: 1,),
               Container(
                 width: screen.percentWidth(0.3),
                 height: screen.percentHeight(0.25),
@@ -79,7 +79,7 @@ class ProductCard extends StatelessWidget {
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 22,
+                    fontSize: 20,
                   ),
                 ),
               ),
@@ -89,7 +89,7 @@ class ProductCard extends StatelessWidget {
                   item.title,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: 12,
                   ),
                   maxLines: 2,  // Giới hạn số dòng hiển thị là 2
                   overflow: TextOverflow.fade,  // Ẩn phần văn bản thừa mà không hiển thị dấu ba chấm
