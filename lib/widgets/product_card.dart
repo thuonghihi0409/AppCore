@@ -34,7 +34,7 @@ class ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              (index%2==1) ? SizedBox(height: screen.percentHeight(0.03),) :SizedBox(height: 1,),
+              (index%2==1) ? SizedBox(height: screen.percentHeight(0.025),) :SizedBox(height: 1,),
               Container(
                 width: screen.percentWidth(0.3),
                 height: screen.percentHeight(0.25),
