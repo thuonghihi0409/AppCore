@@ -3,7 +3,7 @@ class Product {
   final String title;
   final String description;
   final double price;
-  final String imageUrl;
+  final List<String> imageUrls;
   final String category;
 
   Product({
@@ -11,7 +11,7 @@ class Product {
     required this.title,
     required this.description,
     required this.price,
-    required this.imageUrl,
+    required this.imageUrls,
     required this.category,
   });
 
@@ -21,7 +21,7 @@ class Product {
       'title': title,
       'description': description,
       'price': price,
-      'imageUrl': imageUrl,
+      'imageUrls': imageUrls,
       'category': category,
     };
   }
@@ -32,7 +32,7 @@ class Product {
       title: map['title'] as String,
       description: map['description'] as String,
       price: map['price'] as double,
-      imageUrl: map['imageUrl'] as String,
+      imageUrls: map['imageUrl'] ?? [] as List<String>,
       category: map['category'] as String,
     );
   }

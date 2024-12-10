@@ -1,5 +1,7 @@
+import 'package:appcore/UI/profile_screen.dart';
 import 'package:appcore/UI/search_screen.dart';
 import 'package:appcore/utils/data.dart';
+import 'package:appcore/utils/screen_size.dart';
 import 'package:appcore/widgets/category_button.dart';
 import 'package:appcore/widgets/product_card.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +20,7 @@ class _HomeSreeenState extends State<HomeScreen> {
   final List<Widget> _screens = [
     HomeTab(),
     SearchScreen(),
-    Center(
-      child: Text(
-        'Profile Screen',
-        style: TextStyle(color: Colors.white),
-      ),
-    ),
+    ProfileScreen(),
   ];
 
   @override
@@ -38,13 +35,23 @@ class _HomeSreeenState extends State<HomeScreen> {
             _selectedIndex = index;
           });
         },
-        items: const [
+        items:  [
           BottomNavigationBarItem(
             icon: Icon(Icons.home, color: Colors.white),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search, color: Colors.yellow),
+            icon: Container(
+              height: 30,
+              decoration: BoxDecoration(
+                color: Colors.yellow,
+                shape: BoxShape.circle
+              ),
+                child: Padding(
+
+                  padding: const EdgeInsets.all(4.0),
+                  child: Icon(Icons.search, color: Colors.black),
+                )),
             label: '',
           ),
           BottomNavigationBarItem(
@@ -57,24 +64,43 @@ class _HomeSreeenState extends State<HomeScreen> {
   }
 }
 
-class HomeTab extends StatelessWidget {
+class HomeTab extends StatefulWidget {
+  @override
+  _HomeTabState createState() => _HomeTabState();
+}
+
+class _HomeTabState extends State<HomeTab> {
+  String selectedCategory = 'All'; // Lưu trạng thái của danh mục được chọn
+
   @override
   Widget build(BuildContext context) {
+    final screen = ScreenSize(context);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text(
           'Cloths',
-          style: TextStyle(color: Colors.white,fontFamily: 'KoHo'),
+          style: TextStyle(color: Colors.white, fontFamily: "KoHo", fontSize: 46),
         ),
         backgroundColor: Colors.black,
         elevation: 0,
       ),
       body: Column(
         children: [
-          Text(
-            'Collection',
-            style: TextStyle(color: Colors.white),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: const [
+              SizedBox(width: 20),
+              Text(
+                'Collection',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 46,
+                  fontFamily: 'KoHo',
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ],
           ),
           // Danh mục
           Padding(
@@ -82,9 +108,26 @@ class HomeTab extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                CategoryButton(label: 'All', isSelected: true),
-                ...categories_data.map((element) =>
-                    CategoryButton(label: element.title, isSelected: false))
+                // Nút 'All'
+                CategoryButton(
+                  label: 'All',
+                  isSelected: selectedCategory == 'All',
+                  onTap: () {
+                    setState(() {
+                      selectedCategory = 'All';
+                    });
+                  },
+                ),
+                // Các danh mục từ `categories_data`
+                ...categories_data.map((element) => CategoryButton(
+                  label: element.title,
+                  isSelected: selectedCategory == element.title,
+                  onTap: () {
+                    setState(() {
+                      selectedCategory = element.title;
+                    });
+                  },
+                )),
               ],
             ),
           ),
@@ -94,14 +137,19 @@ class HomeTab extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.7,
+                childAspectRatio: 0.55,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
               itemCount: products_data.length,
               itemBuilder: (context, index) {
                 final item = products_data[index];
-                return ProductCard(item: item);
+                // Lọc sản phẩm dựa trên danh mục được chọn
+                if (selectedCategory != 'All' &&
+                    item.category != selectedCategory) {
+                  return const SizedBox.shrink(); // Ẩn sản phẩm không phù hợp
+                }
+                return ProductCard(item: item, screen: screen, index: index);
               },
             ),
           ),
@@ -110,3 +158,4 @@ class HomeTab extends StatelessWidget {
     );
   }
 }
+

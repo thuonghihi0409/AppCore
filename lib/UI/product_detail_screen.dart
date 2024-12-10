@@ -17,6 +17,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   bool? isFavorite;
   PageController? _pageController ;
   int _currentPage = 0;
+  String? selectedSize;
   @override
   void initState() {
     // TODO: implement initState
@@ -31,6 +32,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
   @override
   Widget build(BuildContext context) {
+
     final screen = ScreenSize(context);
     final productProvider = Provider.of<ProductProvider>(context);
     bool isFavorite = productProvider.isFavorite(widget.product.id);
@@ -43,7 +45,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         backgroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -64,7 +66,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         borderRadius: BorderRadius.circular(16),
                         child: PageView.builder(
                           controller: _pageController,
-                          itemCount: 2, // Giả sử bạn chỉ có 1 ảnh cho mỗi phòng
+                          itemCount: widget.product.imageUrls.length, // Giả sử bạn chỉ có 1 ảnh cho mỗi phòng
                           onPageChanged: (index) {
                             setState(() {
                               _currentPage = index;
@@ -73,7 +75,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           },
                           itemBuilder: (context, index) {
                             return Image.network(
-                              widget.product.imageUrl, // URL hình ảnh từ rentalProperty
+                              widget.product.imageUrls[index], // URL hình ảnh từ rentalProperty
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
                                 return Center(child: Text('Failed to load image'));
@@ -107,7 +109,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
             Center(
               child:DotsIndicator(
-                dotsCount: 2,
+                dotsCount: widget.product.imageUrls.length,
                 position: _currentPage.toDouble(),  // Sử dụng giá trị _currentPage
                 decorator: DotsDecorator(
                   activeColor: Colors.white,
@@ -144,24 +146,37 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                   SizedBox(height: 16),
                   // Size Options
-                  Row(
-                    children: ['S', 'M', 'L'].map((size) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: ChoiceChip(
-                          label: Text(size),
-                          selected: size == 'S',
-                          // Default selected size
-                          onSelected: (selected) {},
-                          backgroundColor: Colors.white10,
-                          selectedColor: Colors.white,
-                          labelStyle: TextStyle(
-                            color: size == 'S' ? Colors.black : Colors.white,
+                Row(
+                  children: ['S', 'M', 'L'].map((size) {
+                    bool isSelected = selectedSize == size; // Kiểm tra size được chọn
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedSize = size; // Cập nhật size được chọn
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: isSelected ? Colors.white : Colors.black, // Nền trắng nếu được chọn
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: isSelected ? Colors.black : Colors.white, // Viền đen nếu được chọn
+                            ),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: Text(
+                            size,
+                            style: TextStyle(
+                              color: isSelected ? Colors.black : Colors.white, // Chữ đen nếu được chọn
+                            ),
                           ),
                         ),
-                      );
-                    }).toList(),
-                  ),
+                      ),
+                    );
+                  }).toList(),
+                ),
                   SizedBox(height: 16),
                   // Description
                   Text(
@@ -178,11 +193,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.yellow,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(25),
                         ),
                         padding: EdgeInsets.symmetric(
                           vertical: 16,
-                          horizontal: 64,
+                          horizontal: 100,
                         ),
                       ),
                       child: Text(

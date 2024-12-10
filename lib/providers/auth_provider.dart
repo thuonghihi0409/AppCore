@@ -15,6 +15,7 @@ class AuthProvider with ChangeNotifier {
 
     // Mô phỏng gọi API
     await Future.delayed(const Duration(seconds: 1));
+
     if (true) {
       _user = User(
         id: "001",

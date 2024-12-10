@@ -1,6 +1,7 @@
 import 'package:appcore/UI/home_screen.dart';
 import 'package:appcore/UI/login_screen.dart';
 import 'package:appcore/providers/auth_provider.dart';
+import 'package:appcore/providers/payment_method_provider.dart';
 import 'package:appcore/providers/product_provider.dart';
 import 'package:appcore/providers/search_Provider.dart';
 import 'package:appcore/providers/user_provider.dart';
@@ -17,6 +18,7 @@ void main() {
     ChangeNotifierProvider(create: (_) => ProductProvider()),
     ChangeNotifierProvider(create: (_) => AuthProvider()),
     ChangeNotifierProvider(create: (_) => SearchProvider()),
+    ChangeNotifierProvider(create: (_) => PaymentMethodProvider()),
   ], child: MyApp()));
 }
 

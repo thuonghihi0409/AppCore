@@ -1,5 +1,6 @@
 import 'package:appcore/UI/home_screen.dart';
 import 'package:appcore/providers/search_Provider.dart';
+import 'package:appcore/utils/screen_size.dart';
 import 'package:appcore/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final screen = ScreenSize(context);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -64,14 +66,14 @@ class SearchScreen extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),  // Tắt cuộn mặc định của GridView
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 0.7,
+                      childAspectRatio: 0.5,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                     ),
                     itemCount: provider.filteredProducts.length,
                     itemBuilder: (context, index) {
                       final item = provider.filteredProducts[index];
-                      return ProductCard(item: item);  // Hiển thị sản phẩm theo kết quả tìm kiếm
+                      return ProductCard(item: item, screen: screen,index:  index,);  // Hiển thị sản phẩm theo kết quả tìm kiếm
                     },
                   );
                 },
