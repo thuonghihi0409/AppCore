@@ -1,9 +1,10 @@
+import 'package:appcore/blocs/product/product_bloc.dart';
 import 'package:appcore/models/product.dart';
-import 'package:appcore/providers/product_provider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:appcore/utils/screen_size.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
 
@@ -15,29 +16,32 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   bool? isFavorite;
-  PageController? _pageController ;
+  PageController? _pageController;
   int _currentPage = 0;
   String? selectedSize;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    final productProvider = context.read<ProductProvider>();
     _pageController = PageController();
-    isFavorite = productProvider.isFavorite(widget.product.id);
+    isFavorite = context
+        .read<ProductBloc>()
+        .state
+        .favoriteProducts
+        .contains(widget.product.id);
   }
+
   void dispose() {
     _pageController!.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-
     final screen = ScreenSize(context);
-    final productProvider = Provider.of<ProductProvider>(context);
-    bool isFavorite = productProvider.isFavorite(widget.product.id);
-    PageController _pageController = PageController();
-
+    // final productProvider = Provider.of<ProductProvider>(context);
+    // bool isFavorite = productProvider.isFavorite(widget.product.id);
+    //PageController _pageController = PageController();
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -66,19 +70,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         borderRadius: BorderRadius.circular(16),
                         child: PageView.builder(
                           controller: _pageController,
-                          itemCount: widget.product.imageUrls.length, // Giả sử bạn chỉ có 1 ảnh cho mỗi phòng
+                          itemCount: widget.product.imageUrls
+                              .length, // Giả sử bạn chỉ có 1 ảnh cho mỗi phòng
                           onPageChanged: (index) {
                             setState(() {
                               _currentPage = index;
-                              print("==================================${_currentPage.toDouble()}");
+                              print(
+                                  "==================================${_currentPage.toDouble()}");
                             });
                           },
                           itemBuilder: (context, index) {
                             return Image.network(
-                              widget.product.imageUrls[index], // URL hình ảnh từ rentalProperty
+                              widget.product.imageUrls[
+                                  index], // URL hình ảnh từ rentalProperty
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
-                                return Center(child: Text('Failed to load image'));
+                                return Center(
+                                    child: Text('Failed to load image'));
                               },
                             );
                           },
@@ -89,15 +97,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         right: 16,
                         child: IconButton(
                           icon: Icon(
-                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            isFavorite!
+                                ? Icons.favorite
+                                : Icons.favorite_border,
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            // Thêm hoặc xóa sản phẩm khỏi danh sách yêu thích
-                            if (isFavorite) {
-                              productProvider.removeFromFavorites(widget.product.id);
+                            if (isFavorite!) {
+                              context.read<ProductBloc>().add(
+                                  UnFavariteProduct(id: widget.product.id));
                             } else {
-                              productProvider.addToFavorites(widget.product);
+                              context
+                                  .read<ProductBloc>()
+                                  .add(FavariteProduct(id: widget.product.id));
                             }
                           },
                         ),
@@ -108,20 +120,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ),
             Center(
-              child:DotsIndicator(
-                dotsCount: widget.product.imageUrls.length,
-                position: _currentPage.toDouble(),  // Sử dụng giá trị _currentPage
-                decorator: DotsDecorator(
-                  activeColor: Colors.white,
-                  size: const Size.square(9.0),
-                  activeSize: const Size(18.0, 9.0),
-                  activeShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
+                child: DotsIndicator(
+              dotsCount: widget.product.imageUrls.length,
+              position: _currentPage.toDouble(), // Sử dụng giá trị _currentPage
+              decorator: DotsDecorator(
+                activeColor: Colors.white,
+                size: const Size.square(9.0),
+                activeSize: const Size(18.0, 9.0),
+                activeShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
                 ),
-              )
-
-            ),
+              ),
+            )),
             // Price and Title
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -146,37 +156,45 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                   SizedBox(height: 16),
                   // Size Options
-                Row(
-                  children: ['S', 'M', 'L'].map((size) {
-                    bool isSelected = selectedSize == size; // Kiểm tra size được chọn
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedSize = size; // Cập nhật size được chọn
-                          });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: isSelected ? Colors.white : Colors.black, // Nền trắng nếu được chọn
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: isSelected ? Colors.black : Colors.white, // Viền đen nếu được chọn
+                  Row(
+                    children: ['S', 'M', 'L'].map((size) {
+                      bool isSelected =
+                          selectedSize == size; // Kiểm tra size được chọn
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedSize = size; // Cập nhật size được chọn
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? Colors.white
+                                  : Colors.black, // Nền trắng nếu được chọn
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: isSelected
+                                    ? Colors.black
+                                    : Colors.white, // Viền đen nếu được chọn
+                              ),
                             ),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: Text(
-                            size,
-                            style: TextStyle(
-                              color: isSelected ? Colors.black : Colors.white, // Chữ đen nếu được chọn
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            child: Text(
+                              size,
+                              style: TextStyle(
+                                color: isSelected
+                                    ? Colors.black
+                                    : Colors.white, // Chữ đen nếu được chọn
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  }).toList(),
-                ),
+                      );
+                    }).toList(),
+                  ),
                   SizedBox(height: 16),
                   // Description
                   Text(

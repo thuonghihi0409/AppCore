@@ -1,11 +1,14 @@
-import 'package:appcore/UI/home_screen.dart';
-import 'package:appcore/UI/login_screen.dart';
+import 'package:appcore/blocs/auth/auth_bloc.dart';
+import 'package:appcore/blocs/product/product_bloc.dart';
+import 'package:appcore/screens/home_screen.dart';
+import 'package:appcore/screens/login_screen.dart';
 import 'package:appcore/providers/auth_provider.dart';
 import 'package:appcore/providers/payment_method_provider.dart';
 import 'package:appcore/providers/product_provider.dart';
 import 'package:appcore/providers/search_Provider.dart';
 import 'package:appcore/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 
@@ -13,13 +16,17 @@ import 'package:provider/provider.dart';
 
 void main() {
 
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => UserProvider()),
-    ChangeNotifierProvider(create: (_) => ProductProvider()),
-    ChangeNotifierProvider(create: (_) => AuthProvider()),
-    ChangeNotifierProvider(create: (_) => SearchProvider()),
-    ChangeNotifierProvider(create: (_) => PaymentMethodProvider()),
-  ], child: MyApp()));
+  runApp(MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc()..add(CheckAuthStatusEvent()),
+        ),
+        BlocProvider<ProductBloc>(
+          create: (context) => ProductBloc()..add(LoadProducts()),
+        )      
+      ],
+      child: MyApp(),
+    ),);
 }
 
 class MyApp extends StatelessWidget {
@@ -33,7 +40,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'KoHo',
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        useMaterial3: true
 
       ),
       home: LoginScreen(),

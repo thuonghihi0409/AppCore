@@ -20,7 +20,6 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<void> loadFavorites() async {
-
     updateUI();
   }
 

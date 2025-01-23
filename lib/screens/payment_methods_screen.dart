@@ -1,4 +1,4 @@
-import 'package:appcore/UI/add_payment_methods_screen.dart';
+import 'package:appcore/screens/add_payment_methods_screen.dart';
 import 'package:appcore/models/paymentmethod.dart';
 import 'package:appcore/providers/payment_method_provider.dart';
 import 'package:appcore/utils/screen_size.dart';

@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:appcore/UI/login_screen.dart';
-import 'package:appcore/UI/payment_methods_screen.dart';
+import 'package:appcore/screens/login_screen.dart';
+import 'package:appcore/screens/payment_methods_screen.dart';
 import 'package:appcore/models/user.dart';
 import 'package:appcore/providers/auth_provider.dart';
 import 'package:appcore/utils/screen_size.dart';

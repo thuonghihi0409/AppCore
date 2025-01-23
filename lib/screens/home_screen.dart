@@ -1,5 +1,5 @@
-import 'package:appcore/UI/profile_screen.dart';
-import 'package:appcore/UI/search_screen.dart';
+import 'package:appcore/screens/profile_screen.dart';
+import 'package:appcore/screens/search_screen.dart';
 import 'package:appcore/utils/data.dart';
 import 'package:appcore/utils/screen_size.dart';
 import 'package:appcore/widgets/category_button.dart';
@@ -137,7 +137,7 @@ class _HomeTabState extends State<HomeTab> {
               padding: const EdgeInsets.all(8.0),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.5,
+                childAspectRatio: 0.55,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
